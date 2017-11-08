@@ -27,6 +27,30 @@ def magnitude(number):
     absolute = math.sqrt((number[0] * number[0]) + (number[1] * number[1]))
     return absolute
 
+def complex_add(complex_a,complex_b):
+
+    x1 = float(complex_a[0]) * math.cos(pi/180 * complex_a[1])
+    x2 = float(complex_b[0]) * math.cos(pi/180 * complex_b[1])
+    y1 = float(complex_a[0]) * math.sin(pi/180 * complex_a[1])
+    y2 = float(complex_b[0]) * math.sin(pi/180 * complex_b[1])
+    x_total = x1 + x2
+    y_total = y1 + y2
+    answer = rect_to_polar(x_total, y_total)
+    return answer[0], answer[1]
+
+def complex_division(complex_a, complex_b):
+    real_answer = complex_a[0] / complex_b[0]
+    imag_answer = complex_a[1] - complex_b[1]
+    return real_answer, imag_answer
+
+
+def complex_multiplication(complex_a, complex_b):
+    real_answer = complex_a[0] * complex_b[0]
+    imag_answer = complex_a[1] + complex_b[1]
+    return real_answer, imag_answer
+
+
+
 # **************************************************************************************
 
 # Stating variables
@@ -116,13 +140,13 @@ if (circuit == 0):
 
 # Printing out the results
     if capacitance > inductance:
-        print('Your current will lead your voltage by %f degrees ' % phase_angle)
+        print('Current will lead your voltage by %f degrees ' % phase_angle)
     if inductance > capacitance:
         print('Current will lag your voltage by %f degrees' % phase_angle)
-    print('\nTotal impedance is: %.2f + %.2fj' % (impedance[0], impedance[1]))
-    print('Magnitude of your impedance is: %.2f' % mag_impedance)
-    print('Current is: %f A' % current)
-    print('V(R) = %.2f, V(L) = %.2f, V(C) = %.2f' % (v_r, v_l, v_c))
+    #print('\nTotal impedance is: %.2f + %.2fj' % (impedance[0], impedance[1]))
+    #print('Magnitude of your impedance is: %.2f' % mag_impedance)
+    #print('Current is: %f A' % current)
+    #print('V(R) = %.2f, V(L) = %.2f, V(C) = %.2f' % (v_r, v_l, v_c))
 
 # ***************************************************************************************
 
@@ -188,11 +212,11 @@ if (circuit == 1):
     resistor_branch_current = total_current * (total_impedance[0] / resistance[0])
 
 # Results
-    print('The magnitude of your impedance is %f with a phase of %f degrees' % (total_impedance[0], total_impedance[1]))
+    #print('The magnitude of your impedance is %f with a phase of %f degrees' % (total_impedance[0], total_impedance[1]))
     if total_impedance[1] > 0:
         print('Current will be lagging voltage by %f degrees' % total_impedance[1])
     if total_impedance[1] < 0:
         print('Current will be leading voltage by %f degrees' % total_impedance[1])
     if total_impedance[1] == 0:
         print('Voltage and current will be in phase!')
-    print('Total current will be %f A' % total_current)
+    #print('Total current will be %f A' % total_current)
