@@ -8,37 +8,32 @@ import time
 
 pi = 3.1415926535897932384626433832
 
-# Input complex numbers (magnitude, phase) POLAR FORMAT
-# Returns sum.
 
-# Rectangular to Polar Conversion. Takes an x & y cartesian coordinate and returns in polar format (r, theta)
-
+# Rectangular to Polar Conversion.
 def rect_to_polar(x, y):
     angle = math.atan((y/x))
     angle = angle * (180/pi)
     magnitude = (math.sqrt((x*x)+(y*y)))
     answer = magnitude, angle
     return answer
-
-# Polar to Rect conversion. Takes a polar format number( r, theta) and returns the x & y lengths
-
+# Polar to Rect conversion.
 def polar_to_rect(polar_num):
     y = polar_num[0] * (math.sin(polar_num[1] * pi/180))
     x = polar_num[0] * (math.cos(polar_num[1] * pi/180))
     rect = x, y
     return rect
-
 # Magnitude function for later use. Takes a real + j number and returns the magnitude
 def magnitude(number):
     absolute = math.sqrt((number[0] * number[0]) + (number[1] * number[1]))
     return absolute
+
+# **************************************************************************************
 
 # Stating variables
 PARA = 1
 SERI = 0
 POLAR = 1
 RECT = 0
-
 
 # Series or Parallel
 lcd.message("Series?\n")
@@ -49,7 +44,7 @@ while(True):
         lcd.clear()
         lcd.message("Series Selected")
         circuit = SERI
-        time.sleep(3)
+        time.sleep(2)
         lcd.clear()
         break
         
@@ -57,14 +52,36 @@ while(True):
         lcd.clear()
         lcd.message("Parallel Selected")
         circuit = PARA
-        time.sleep(3)
+        time.sleep(2)
         lcd.clear()
         break
-
+# *********************************************************************************************************
 
 # Series Branch Calculations
 if (circuit == 0):
+    print('Series Circuit')
     print('If a value is not present, please type 0')
+
+    lcd.message("Polar Answers?\n")
+    time.sleep(1)
+    lcd.message("<- Yes No ->")
+    while(True):
+        if (lcd.is_pressed(LCD.LEFT)):
+            lcd.clear()
+            lcd.message("Polar Selected")
+            numtype = POLAR
+            time.sleep(3)
+            lcd.clear()
+            break
+        
+        elif(lcd.is_pressed(LCD.RIGHT)):
+            lcd.clear()
+            lcd.message("Rectangular Selected")
+            numtype = RECT
+            time.sleep(3)
+            lcd.clear()
+            break
+    
     frequency = input('\nWhat is the frequency of the source? (in Hz): ')
     voltage = input('\nWhat is the voltage of the source? (in RMS): ')
     resistor_value = input('\nWhat value of resistor is present? (in Ohms): ')
@@ -101,15 +118,39 @@ if (circuit == 0):
     if capacitance > inductance:
         print('Your current will lead your voltage by %f degrees ' % phase_angle)
     if inductance > capacitance:
-        print('Your current will lag your voltage by %f degrees' % phase_angle)
-    print('\nYour total impedance is: %.2f + %.2fj' % (impedance[0], impedance[1]))
-    print('That means the magnitude of your impedance is: %.2f' % mag_impedance)
-    print('Which then means your current is: %f A' % current)
+        print('Current will lag your voltage by %f degrees' % phase_angle)
+    print('\nTotal impedance is: %.2f + %.2fj' % (impedance[0], impedance[1]))
+    print('Magnitude of your impedance is: %.2f' % mag_impedance)
+    print('Current is: %f A' % current)
     print('V(R) = %.2f, V(L) = %.2f, V(C) = %.2f' % (v_r, v_l, v_c))
+
+# ***************************************************************************************
 
 # Parallel branch.
 if (circuit == 1):
-    print('This experiment I will be performing parallel calculations. One R,L, and C is expected')
+    print('Parallel Circuit')
+
+    lcd.message("Polar Answers?\n")
+    time.sleep(1)
+    lcd.message("<- Yes No ->")
+    while(True):
+        if (lcd.is_pressed(LCD.LEFT)):
+            lcd.clear()
+            lcd.message("Polar Selected")
+            numtype = POLAR
+            time.sleep(3)
+            lcd.clear()
+            break
+        
+        elif(lcd.is_pressed(LCD.RIGHT)):
+            lcd.clear()
+            lcd.message("Rectangular Selected")
+            numtype = RECT
+            time.sleep(3)
+            lcd.clear()
+            break
+
+        
     print('If a value is not present, please type 0')
     frequency = input('\nWhat is the frequency of the source? (in Hz): ')
     voltage = input('\nWhat is the voltage of the source? (in RMS): ')
@@ -119,7 +160,7 @@ if (circuit == 1):
     capacitor_value = input('\nWhat is the value of your capacitor? (in Farads): ')
 
 
-# Some basic calculations. Polar format is utilized! r, Theta
+# Calculations. Polar format.
     polar_voltage = voltage, 0
     omega = 2 * pi * frequency
     resistor_value = float(resistor_value)
@@ -130,7 +171,7 @@ if (circuit == 1):
     inductor_branch = complex_add(inductor_resistance, inductance)
     one = 1, 0
 
-# Getting the inverse of the impedances for later addition together
+# Inverse of the impedances
     inverse_resistance = complex_division(one, resistance)
     inverse_p_capacitance = complex_division(one, capacitance)
     inverse_p_inductance = complex_division(one, inductor_branch)
@@ -146,7 +187,7 @@ if (circuit == 1):
     cap_branch_current = total_current * (total_impedance[0] / capacitance[0])
     resistor_branch_current = total_current * (total_impedance[0] / resistance[0])
 
-# Printing out the results for the user!
+# Results
     print('The magnitude of your impedance is %f with a phase of %f degrees' % (total_impedance[0], total_impedance[1]))
     if total_impedance[1] > 0:
         print('Current will be lagging voltage by %f degrees' % total_impedance[1])
